@@ -1,0 +1,7 @@
+name: Rechant
+version: '${project.version}'
+main: io.beailotus.rechant.Rechant
+api-version: 1.19
+authors: [ beailotus ]
+description: A plugin which allows you to recycle enchantments by taking them off old items and putting them into books.
+website: https://github.com/beailotus/rechant
