@@ -4,8 +4,6 @@ import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.inventory.PrepareAnvilEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.EnchantmentStorageMeta;
@@ -27,9 +25,7 @@ public final class Rechant extends JavaPlugin implements Listener {
     }
 
     @EventHandler
-    public void rechantBook(InventoryClickEvent event){
-        if(event.getInventory().getType() != InventoryType.ANVIL) return;
-
+    public void rechantBook(PrepareAnvilEvent event){
         ItemStack first = event.getInventory().getItem(0);
         ItemStack second = event.getInventory().getItem(1);
 
@@ -44,21 +40,13 @@ public final class Rechant extends JavaPlugin implements Listener {
         EnchantmentStorageMeta meta = (EnchantmentStorageMeta) result.getItemMeta();
 
         for (Enchantment enchantment : first.getEnchantments().keySet()) {
+            assert meta != null;
             meta.addStoredEnchant(enchantment, first.getEnchantments().get(enchantment), true);
         }
 
         result.setItemMeta(meta);
-        event.getInventory().setItem(2, result);
 
-        if(!event.getClick().isLeftClick()) return;
-
-        if(event.getSlot() != 2) return;
-
-        event.getInventory().setItem(0, new ItemStack(Material.AIR));
-        event.getInventory().setItem(1, new ItemStack(Material.AIR));
-        event.getInventory().setItem(2, new ItemStack(Material.AIR));
-
-        event.setCursor(result);
-
+        event.setResult(result);
+        this.getServer().getScheduler().runTask(this, () -> event.getInventory().setRepairCost(0));
     }
 }
