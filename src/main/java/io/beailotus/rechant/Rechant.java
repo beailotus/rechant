@@ -10,10 +10,14 @@ import org.bukkit.inventory.meta.EnchantmentStorageMeta;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public final class Rechant extends JavaPlugin implements Listener {
+    private Integer cost = 0;
 
     @Override
     public void onEnable() {
         // Plugin startup logic
+        getLogger().info("[#] Configuring plugin");
+        saveDefaultConfig();
+        this.cost = getConfig().getInt("cost");
         getLogger().info("[#] Registering events");
         getServer().getPluginManager().registerEvents(this, this);
         getLogger().info("[+] Plugin enabled!");
@@ -47,6 +51,6 @@ public final class Rechant extends JavaPlugin implements Listener {
         result.setItemMeta(meta);
 
         event.setResult(result);
-        this.getServer().getScheduler().runTask(this, () -> event.getInventory().setRepairCost(0));
+        this.getServer().getScheduler().runTask(this, () -> event.getInventory().setRepairCost(this.cost));
     }
 }
